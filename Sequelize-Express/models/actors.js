@@ -5,7 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Actors extends Model {
     static associate(models) {
-      Actors.belongsTo(models.Films)
+      Actors.belongsToMany(models.Films, {through: models.ActorFilm})
       // define association here
     }
   }
@@ -15,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     name: DataTypes.STRING,
-    FilmId: DataTypes.STRING,
     birth: DataTypes.DATEONLY,
     age: DataTypes.INTEGER,
     bio: DataTypes.TEXT,

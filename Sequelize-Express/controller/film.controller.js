@@ -1,4 +1,4 @@
-const { Films } = require('../models')
+const { Films, Actors } = require('../models')
 const uuid = require('uuid')
 
 class FilmController {
@@ -8,9 +8,17 @@ class FilmController {
     }
 
     static async getFilm(req, res) {
-        const data = await Films.findOne({
-            where: { id: req.params.id }
-        })
+        const options = {
+            where: { id: req.params.id },
+            // Memasukkan Actor sesuai FilmId
+            include: [
+                { 
+                    model: Actors,
+                    attribute: ['name'] 
+                }
+            ]
+        }
+        const data = await Films.findOne(options)
         res.status(200).json({ data })
     }
 

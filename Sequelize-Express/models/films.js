@@ -5,7 +5,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Films extends Model {
     static associate(models) {
-      Films.hasMany(models.Actors)
+      Films.belongsTo(models.productionHouse)
+      Films.belongsToMany(models.Actors, {through: models.ActorFilm})
       // define association here
     }
   }

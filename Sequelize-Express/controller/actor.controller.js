@@ -1,4 +1,4 @@
-const { Actors } = require('../models')
+const { Actors, Films } = require('../models')
 const uuid = require('uuid')
 
 class ActorController {
@@ -8,15 +8,23 @@ class ActorController {
     }
 
     static async getActor(req, res) {
-        const data = await Actors.findOne({
-            where: { id: req.params.id }
-        })
+        const options = {
+            where: { id: req.params.id },
+            // Memasukkan Actor sesuai FilmId
+            include: [
+                { 
+                    model: Films,
+                    attribute: ['title'] 
+                }
+            ]
+        }
+        const data = await Actors.findOne(options)
         res.status(200).json({ data })
     }
 
     static async updateActor(req, res) {
-        const { name, FilmId, birth, age, bio, nationality } = req.body
-        const payload = { name, FilmId, birth, age, bio, nationality }
+        const { name, birth, age, bio, nationality } = req.body
+        const payload = { name, birth, age, bio, nationality }
         const updated = await Actors.update(payload, { 
             where: { id: req.params.id},
             returning: true
@@ -26,8 +34,8 @@ class ActorController {
 
     static async createActor(req, res) {
         const id = uuid.v4()
-        const { name, FilmId, birth, age, bio, nationality } = req.body
-        const payload = { id, name, FilmId, birth, age, bio, nationality }
+        const { name, birth, age, bio, nationality } = req.body
+        const payload = { id, name, birth, age, bio, nationality }
         const newActor = await Actors.create(payload)
         res.status(200).json({ data: newActor })
     }
